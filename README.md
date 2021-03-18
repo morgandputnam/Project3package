@@ -15,12 +15,13 @@ You can install the released version of Project3package from [CRAN](https://CRAN
 install.packages("Project3package")
 ```
 
-## Example
+## Use
 
-This is a basic example which shows you how to solve a common problem:
+The vignette demonstrates example usage of all functions. To view it, use:
 
 ``` r
 library(Project3package)
 ## basic example code
+help(package = "Project3package", help_type = "html")
 ```
 
