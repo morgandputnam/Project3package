@@ -24,3 +24,7 @@ A list with two elements:
 This function predicts categories based on the k nearest neighbors and uses
 cross validation to indicate efficacy.
 }
+\examples{
+# I have spent an hour on this and can't get a working example
+
+}

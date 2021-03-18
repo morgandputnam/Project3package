@@ -7,13 +7,15 @@
 #'
 #' @return a numeric representing the cross validation error.
 #'
+#' @keywords prediction
+#'
 #' @export
-#' @importFrom dplyr %>%
+#' @import dplyr
 #' @importFrom randomForest randomForest
+#' @import palmerpenguins
 my_rf_cv <- function(k) {
-  penguins <- my_penguins
-  penguin_df <- penguins[-c(1, 2, 7, 8)] # drop unwanted fields from penguin
-  penguin_df <- penguin_df[-c(4, 272),] # these two rows are NA
+  penguins <- my_penguins[-c(1, 2, 7, 8)]
+  penguin_df <- penguins[-c(4, 272),] # these two rows are NA
 
   # random grouping
   fold <- sample(rep(1:k, length = nrow(penguin_df)))

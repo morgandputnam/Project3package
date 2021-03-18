@@ -18,6 +18,8 @@
 #'  my_t.test(c(1, 2, 3, 4, 5), "two.sided", 0)
 #'  my_t.test(x = 1:50, "greater", 10)
 #'
+#' @keywords inference
+#'
 #' @export
 my_t.test <- function(x, alternative, mu) {
   # throw an error if invalid alternative

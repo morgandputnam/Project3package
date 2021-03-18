@@ -12,6 +12,11 @@
 #'   \code{"class"}: the predicted class of each element of \code{train},
 #'   \code{"cv_error"}: the cross validation error for the predictions.
 #'
+#' @examples
+#' # I have spent an hour on this and can't get a working example
+#'
+#' @keywords prediction
+#'
 #' @export
 #' @import class
 my_knn_cv <- function(train, cl, k_nn, k_cv) {

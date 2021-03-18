@@ -20,8 +20,10 @@
 #' my_lm(y ~ x, example.df)
 #' my_lm(x ~ y, example.df)
 #'
+#' @keywords prediction
+#'
 #' @export
-#' @importFrom stats filter model.frame model.matrix model.response predict pt sd
+#' @importFrom stats model.frame model.matrix model.response predict pt sd
 my_lm <- function(formula, data) {
   x <- model.matrix(formula, data)
   frame <- model.frame(formula, data)

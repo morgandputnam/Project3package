@@ -1,0 +1,151 @@
+---
+title: "Project 3: Project3package Tutorial"
+author: "Morgan Putnam"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Project3package Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(Project3package)
+library(tidyverse)
+```
+
+## Introduction
+The Project3package contains four functions, titled my_t.test, my_lm, my_knn_cv,
+and my_rf_cv. my_t.test runs a t test, my_lm makes a regression model, my_knn_cv
+predicts categories based on the k nearest neighbors and has cross validation,
+and my_rf_cv calculates the cross validation error of random forest predictions
+on the palmerpenguins penguin data set.
+  
+Install Project3package using
+```{r, eval = FALSE}
+devtools::install_github("morgandputnam/Project3package")
+```
+  
+Include it using
+```{r, message = FALSE, warning = FALSE}
+library(Project3package)
+```
+
+## my_t.test tutorial
+```{r}
+tutorial_lifeExp <- my_gapminder$lifeExp
+
+unequalEx <- my_t.test(tutorial_lifeExp, alternative = "two.sided", mu = 60)
+
+lessEx <- my_t.test(tutorial_lifeExp, alternative = "less", mu = 60)
+
+greaterEx <- my_t.test(tutorial_lifeExp, alternative = "greater", mu = 60)
+
+as.table(c("unequal" = unequalEx$p_val,
+           "less" = lessEx$p_val,
+           "greater" = greaterEx$p_val))
+```
+  
+From the examples, it looks like the only statistically significant test is for
+average life expectancy being less than 60. As such, there is sufficient evidence
+to reject the null hypothesis that the average life expectancy is 60 in favor of
+the hypothesis that it is lesser. We cannot reject the null hypothesis for the
+other two tests.
+
+## my_lm tutorial
+```{r, message = FALSE, warning = FALSE}
+lm_example <- my_lm(lifeExp ~ gdpPercap + continent, my_gapminder)
+as.table(lm_example)
+```
+  
+  Looking at the coefficient for gdpPercap we have approximately 0.0004453, meaning
+that we would expect an increase by 0.0004453 in life expectancy each time the 
+gdpPercap goes up by one unit.
+
+  Our null hypothesis for this coefficient is that it is zero, or, in other words,
+it has no impact on life expectancy. Our alternate hypothesis is that it does.
+
+  Based on the p-value, 8.552893x10^-73, there is sufficient evidence to reject
+the null hypothesis that gdp has no impact on life expectancy in favor of the
+alternative hypothesis that it does.
+
+```{r}
+ggplot(data = my_gapminder, aes(x = log(gdpPercap), y = lifeExp, color = "red")) +
+  geom_point() +
+  geom_smooth(method = "lm", aes(color = "black")) +
+  theme(legend.position = "none")
+```
+  As can be seen from this graph, GDP per capita represents the general trend in
+life expectancy increases fairly well. I took the log of GDP per capita because
+the scale was in the tens of thousands.
+
+## my_knn_cv tutorial
+```{r, eval = TRUE}
+penguin_df <- my_penguins[-c(1, 2, 7, 8)] # drop unwanted fields from penguin
+penguin_df <- penguin_df[-c(4, 272),] # these two rows are NA
+penguin_species <- my_penguins$species[-c(4, 272)]
+
+example_knn_errors <- numeric(10)
+for (i in 1:10) {
+  current_knn <- my_knn_cv(penguin_df, penguin_species, k_nn = i, k_cv = 5)
+  example_knn_errors[i] <- current_knn$cv_error
+}
+  as.table(example_knn_errors)
+
+```
+
+  Based on the data, it seems that the model with k_nn = 1 is the best for both
+the training error and the CV error, which is interesting. I am not sure why,
+but this indicates to me that the model using only one neighbor is the one I
+would use in practical applications.
+  The purpose of cross validation is to test subsets of the data using the rest
+of the data as the training set, and then calculating how inaccurate it is. This
+number can then be used to determine which number of neighbors appears to be the
+most effective.
+
+## my_rf_cv tutorial
+```{r, eval = TRUE}
+k <- 30
+folds_2 <- numeric(k)
+folds_5 <- numeric(k)
+folds_10 <- numeric(k)
+
+for (i in 1:k) {
+  folds_2[i] <- my_rf_cv(2)
+  folds_5[i] <- my_rf_cv(5)
+  folds_10[i] <- my_rf_cv(10)
+}
+
+example_df <- data.frame("2" = folds_2, "5" = folds_5, "10" = folds_10)
+
+ggplot(data = example_df, aes(x = folds_2)) +
+  geom_boxplot() +
+  labs(title = "2 Folds") +
+  xlab("CV Error")
+
+ggplot(data = example_df, aes(x = folds_5)) +
+  geom_boxplot() +
+  labs(title = "5 Folds") +
+  xlab("CV Error")
+
+ggplot(data = example_df, aes(x = folds_10)) +
+  geom_boxplot() +
+  labs(title = "10 Folds") +
+  xlab("CV Error")
+example_stats <- data.frame("mean" = c(mean(folds_2), mean(folds_5), mean(folds_10)),
+                            "std. dev" = c(sd(folds_2), sd(folds_5), sd(folds_10)))
+example_stats
+```
+
+  It appears that the CV error goes down as the number of folds goes up, while the
+standard deviation goes up. I am not sure why exactly the standard deviation goes
+up, but I think it definitely makes it difficult to determine which of these
+models would be the most effective considering that their means are not that different.
+A wider variety of number of folds probably needs to be tested since these three
+models all overlap significantly.
