@@ -12,13 +12,8 @@
 #'   \code{"class"}: the predicted class of each element of \code{train},
 #'   \code{"cv_error"}: the cross validation error for the predictions.
 #'
-#' @examples
-#' train <- mtcars[-9]
-#' cl <- rownames(train)
-#' my_knn_cv(train, cl, 3, 5)
-#' my_knn_cv(train, cl, 2, 4)
-#'
 #' @export
+#' @import class
 my_knn_cv <- function(train, cl, k_nn, k_cv) {
   fold <- sample(rep(1:k_cv, length = nrow(train)))
   folds <- data.frame(train, "fold" = fold)

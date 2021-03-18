@@ -8,6 +8,8 @@
 #' @return a numeric representing the cross validation error.
 #'
 #' @export
+#' @importFrom dplyr %>%
+#' @importFrom randomForest randomForest
 my_rf_cv <- function(k) {
   penguins <- my_penguins
   penguin_df <- penguins[-c(1, 2, 7, 8)] # drop unwanted fields from penguin

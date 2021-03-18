@@ -24,10 +24,3 @@ A list with two elements:
 This function predicts categories based on the k nearest neighbors and uses
 cross validation to indicate efficacy.
 }
-\examples{
-train <- mtcars[-9]
-cl <- rownames(train)
-my_knn_cv(train, cl, 3, 5)
-my_knn_cv(train, cl, 2, 4)
-
-}
