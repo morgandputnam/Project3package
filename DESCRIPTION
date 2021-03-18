@@ -1,0 +1,27 @@
+Package: Project3package
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Morgan",
+           family = "Putnam",
+           role = c("aut", "cre"),
+           email = "mputna@cs.washington.edu")
+Description: This package includes the my_t.test, my_lm, my_knn_cv, and my_rf_cv
+    functions.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Depends: 
+    R (>= 2.10),
+    dplyr,
+    class,
+    tidyverse,
+    stats
+Imports: 
+    tibble,
+    class,
+    tidyverse,
+    dplyr,
+    stats
